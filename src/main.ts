@@ -1,11 +1,6 @@
 import './style.css'
-
-//structure of the data schema
-interface Todo { 
-  id: number;
-  text: string;
-  completed: boolean;
-}
+import { createTodo } from './todoLogic'
+import type { Todo } from './todoLogic'
 
 let todos: Todo[] = [ ];
 
@@ -14,11 +9,7 @@ const todoForm = document.querySelector('.todo-form') as HTMLFormElement;
 const todolist = document.getElementById('todo-list') as HTMLUListElement;
 
 const addTodo = (text: string): void => {
-  const newTodo: Todo = {
-    id: Date.now(), //u can use ggu id 
-    text: text,
-    completed: false
-  }
+  const newTodo: Todo = createTodo(text);
   todos.push(newTodo);
   console.log(`todo added: ${todos}`);
 
