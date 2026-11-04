@@ -70,3 +70,33 @@ describe('toggleTodo', () => {
     expect(todos[0].completed).toBe(false);
   });
 });
+
+describe('priority', () => {
+  // the priority we choose is saved on the todo
+  it('creates a todo with the given priority', () => {
+    const todo = createTodo('Study for exam', 'high');
+    expect(todo.priority).toBe('high');
+  });
+
+  // if no priority is given, medium is used
+  it('uses medium as the default priority', () => {
+    const todo = createTodo('Buy milk');
+    expect(todo.priority).toBe('medium');
+  });
+
+  // toggling completed should not remove or change the priority
+  it('keeps the priority when a todo is toggled', () => {
+    const todos: Todo[] = [{ id: 1, text: 'Study', completed: false, priority: 'low' }];
+    const result = toggleTodo(todos, 1);
+    expect(result[0].priority).toBe('low');
+  });
+
+  // the union type only allows 'low' | 'medium' | 'high'.
+  // The ts-expect-error comment below tells TypeScript we EXPECT an error on the next line.
+  // If 'urgent' was ever allowed, tsc would fail the build because the error is missing.
+  it('only allows low, medium or high (checked by TypeScript)', () => {
+    // @ts-expect-error 'urgent' is not a valid Priority
+    const todo = createTodo('Something', 'urgent');
+    expect(todo).toBeDefined();
+  });
+});
