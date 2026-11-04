@@ -1,6 +1,6 @@
 import './style.css'
 import { createTodo, isValidTodoText, toggleTodo } from './todoLogic'
-import type { Todo } from './todoLogic'
+import type { Todo, Priority } from './todoLogic'
 
 let todos: Todo[] = [ ];
 
@@ -8,6 +8,7 @@ const todoInput = document.getElementById('todo-input') as HTMLInputElement;
 const todoForm = document.querySelector('.todo-form') as HTMLFormElement;
 const todolist = document.getElementById('todo-list') as HTMLUListElement;
 const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
+const prioritySelect = document.getElementById('priority-select') as HTMLSelectElement;
 
 // shows the red border and the error text
 const showError = (): void => {
@@ -21,8 +22,8 @@ const hideError = (): void => {
   errorMessage.style.display = 'none';
 }
 
-const addTodo = (text: string): void => {
-  const newTodo: Todo = createTodo(text);
+const addTodo = (text: string, priority: Priority): void => {
+  const newTodo: Todo = createTodo(text, priority);
   todos.push(newTodo);
   console.log(`todo added: ${todos}`);
 
@@ -40,8 +41,13 @@ li.className = 'todo-item';
 if (todo.completed) {
   li.classList.add('completed');
 }
+// priority is optional, so only show the badge if the todo has one
+const priorityBadge = todo.priority
+  ? `<span class="priority-badge priority-${todo.priority}">${todo.priority}</span>`
+  : '';
 li.innerHTML = `
-<span>${todo.text}</span>
+${priorityBadge}
+<span class="todo-text">${todo.text}</span>
 <button>remove</button>
 `
 addRemoveButtonListener(li, todo.id);
@@ -59,7 +65,9 @@ todoForm.addEventListener('submit', (event: Event) => {
   const text = todoInput.value.trim();
 
   if (isValidTodoText(text)) {
-    addTodo(text)
+    // a <select> value is always a string, so we tell TypeScript it is a Priority
+    const priority = prioritySelect.value as Priority;
+    addTodo(text, priority)
     todoInput.value = '' //clears the input field after adding a todo
     hideError()
   } else {
@@ -86,7 +94,7 @@ const removeTodo = (id:number):void => {
 
 // clicking the text of a todo marks it as completed (or not completed again)
 const addToggleListener = (li: HTMLLIElement, id: number): void => {
-  const textSpan = li.querySelector('span');
+  const textSpan = li.querySelector('.todo-text');
   textSpan?.addEventListener('click', () => {
     todos = toggleTodo(todos, id);
     renderTodos();
