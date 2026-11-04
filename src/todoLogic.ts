@@ -7,7 +7,12 @@ export interface Todo {
   completed: boolean;
 }
 
-export const createTodo = (text: string): Todo => {
+// A todo text is only valid if it has at least one character that is not a space
+export const isValidTodoText = (text: string): boolean => {
+  return text.trim().length > 0;
+};
+
+export const createTodo =(text: string): Todo => {
   return {
     id: Date.now(),
     text: text,

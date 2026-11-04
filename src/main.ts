@@ -1,5 +1,5 @@
 import './style.css'
-import { createTodo } from './todoLogic'
+import { createTodo, isValidTodoText } from './todoLogic'
 import type { Todo } from './todoLogic'
 
 let todos: Todo[] = [ ];
@@ -7,6 +7,19 @@ let todos: Todo[] = [ ];
 const todoInput = document.getElementById('todo-input') as HTMLInputElement;
 const todoForm = document.querySelector('.todo-form') as HTMLFormElement;
 const todolist = document.getElementById('todo-list') as HTMLUListElement;
+const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
+
+// shows the red border and the error text
+const showError = (): void => {
+  todoInput.classList.add('input-error');
+  errorMessage.style.display = 'block';
+}
+
+// removes the red border and hides the error text
+const hideError = (): void => {
+  todoInput.classList.remove('input-error');
+  errorMessage.style.display = 'none';
+}
 
 const addTodo = (text: string): void => {
   const newTodo: Todo = createTodo(text);
@@ -39,12 +52,20 @@ renderTodos();
 todoForm.addEventListener('submit', (event: Event) => {
   event.preventDefault();
 
-  const text = todoInput .value.trim();
+  const text = todoInput.value.trim();
 
-  if (text !== '') {
+  if (isValidTodoText(text)) {
     addTodo(text)
     todoInput.value = '' //clears the input field after adding a todo
- }
+    hideError()
+  } else {
+    showError()
+  }
+})
+
+// as soon as the user starts typing again, the error goes away
+todoInput.addEventListener('input', () => {
+  hideError()
 })
 
 
