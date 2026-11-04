@@ -1,6 +1,7 @@
 import './style.css'
 import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos, sortByPriority } from './todoLogic'
 import type { Todo, Priority } from './todoLogic'
+import { getThemeColor } from './themeLogic'
 
 // the name (key) we save the todos under in localStorage
 const STORAGE_KEY = 'todos';
@@ -21,6 +22,25 @@ const prioritySelect = document.getElementById('priority-select') as HTMLSelectE
 const searchInput = document.getElementById('search-input') as HTMLInputElement;
 const sortButton = document.getElementById('sort-button') as HTMLButtonElement;
 const clearButton = document.getElementById('clear-button') as HTMLButtonElement;
+const colorPicker = document.getElementById('color-picker') as HTMLInputElement;
+
+// the name (key) we save the theme color under in localStorage
+const THEME_KEY = 'themeColor';
+
+// changes the --navy CSS variable, so every button, outline and label gets the new color
+const applyThemeColor = (color: string): void => {
+  document.documentElement.style.setProperty('--navy', color);
+  colorPicker.value = color;
+}
+
+// use the saved theme color when the page opens (or the default navy)
+applyThemeColor(getThemeColor(localStorage.getItem(THEME_KEY)));
+
+// when the user picks a color: use it right away and save it
+colorPicker.addEventListener('input', () => {
+  applyThemeColor(colorPicker.value);
+  localStorage.setItem(THEME_KEY, colorPicker.value);
+})
 
 // shows the red border and the error text
 const showError = (): void => {
