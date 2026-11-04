@@ -1,0 +1,79 @@
+// Pure todo logic: no DOM code here, so it can be tested with Vitest.
+
+// Type alias + union type: a priority can ONLY be one of these three strings
+export type Priority = 'low' | 'medium' | 'high';
+
+//structure of the data schema
+export interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+  priority?: Priority; // optional: a todo does not have to have a priority
+}
+
+// A todo text is only valid if it has at least one character that is not a space
+export const isValidTodoText = (text: string): boolean => {
+  return text.trim().length > 0;
+};
+
+// priority is 'medium' if no priority is given
+export const createTodo = (text: string, priority: Priority = 'medium'): Todo => {
+  return {
+    id: Date.now(),
+    text: text,
+    completed: false,
+    priority: priority
+  };
+};
+
+// Returns a new list where the todo with this id has its completed status flipped
+export const toggleTodo = (todos: Todo[], id: number): Todo[] => {
+  return todos.map(todo => {
+    if (todo.id === id) {
+      return { ...todo, completed: !todo.completed };
+    }
+    return todo;
+  });
+};
+
+// Returns only the todos whose text contains the search text (not case-sensitive)
+export const searchTodos = (todos: Todo[], searchText: string): Todo[] => {
+  const search = searchText.trim().toLowerCase();
+  if (search === '') {
+    return todos; // empty search: show everything
+  }
+  return todos.filter(todo => todo.text.toLowerCase().includes(search));
+};
+
+// Turns the saved text from localStorage back into a list of todos.
+// JSON.parse returns the type `any`, because TypeScript can't know what is inside the text.
+// So we check the data first, before we treat it as Todo[].
+export const parseTodos = (saved: string | null): Todo[] => {
+  if (saved === null) {
+    return []; // nothing saved yet
+  }
+  try {
+    const data: any = JSON.parse(saved);
+    if (!Array.isArray(data)) {
+      return []; // saved data is not a list, so we can't use it
+    }
+    return data as Todo[];
+  } catch {
+    return []; // the saved text is broken JSON
+  }
+};
+
+// Turns a priority into a number so priorities can be compared.
+// The parameter is optional because a todo does not have to have a priority.
+const priorityValue = (priority?: Priority): number => {
+  if (priority === 'high') return 3;
+  if (priority === 'medium') return 2;
+  if (priority === 'low') return 1;
+  return 0; // no priority: goes to the bottom
+};
+
+// Returns a new list sorted by priority: high first, then medium, then low
+export const sortByPriority = (todos: Todo[]): Todo[] => {
+  // [...todos] makes a copy, because .sort() would change the original list
+  return [...todos].sort((a, b) => priorityValue(b.priority) - priorityValue(a.priority));
+};

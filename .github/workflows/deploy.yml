@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+# Run every time something is pushed (or merged) into main
+on:
+  push:
+    branches: [main]
+  # Also allow starting it by hand from the Actions tab
+  workflow_dispatch:
+
+# Permissions the workflow needs to publish to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Never deploy code with failing tests
+      - name: Run tests
+        run: npm test
+
+      # Builds the finished website into the dist folder
+      - name: Build
+        run: npm run build
+
+      # Test the built app in a real browser before it goes online
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
+      # Pack the dist folder so the deploy job can publish it
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build # only start when the build job has succeeded
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
