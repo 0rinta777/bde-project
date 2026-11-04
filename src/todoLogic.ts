@@ -19,3 +19,13 @@ export const createTodo =(text: string): Todo => {
     completed: false
   };
 };
+
+// Returns a new list where the todo with this id has its completed status flipped
+export const toggleTodo = (todos: Todo[], id: number): Todo[] => {
+  return todos.map(todo => {
+    if (todo.id === id) {
+      return { ...todo, completed: !todo.completed };
+    }
+    return todo;
+  });
+};

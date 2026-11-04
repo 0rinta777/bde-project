@@ -1,5 +1,5 @@
 import './style.css'
-import { createTodo, isValidTodoText } from './todoLogic'
+import { createTodo, isValidTodoText, toggleTodo } from './todoLogic'
 import type { Todo } from './todoLogic'
 
 let todos: Todo[] = [ ];
@@ -37,11 +37,15 @@ const renderTodos = (): void => {
   todos.forEach(todo => {
 const li = document.createElement('li');
 li.className = 'todo-item';
+if (todo.completed) {
+  li.classList.add('completed');
+}
 li.innerHTML = `
 <span>${todo.text}</span>
 <button>remove</button>
 `
 addRemoveButtonListener(li, todo.id);
+addToggleListener(li, todo.id);
 todolist.appendChild(li);
 })
 }
@@ -78,6 +82,15 @@ const addRemoveButtonListener = (li:HTMLLIElement, id: number) :void => { //this
 const removeTodo = (id:number):void => {
   todos = todos.filter(todo => todo.id !== id)
   renderTodos()
+}
+
+// clicking the text of a todo marks it as completed (or not completed again)
+const addToggleListener = (li: HTMLLIElement, id: number): void => {
+  const textSpan = li.querySelector('span');
+  textSpan?.addEventListener('click', () => {
+    todos = toggleTodo(todos, id);
+    renderTodos();
+  })
 }
 
 // end of code from 01-10 bde
