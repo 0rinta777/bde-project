@@ -37,6 +37,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Test the built app in a real browser before it goes online
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
       # Pack the dist folder so the deploy job can publish it
       - name: Upload site
         uses: actions/upload-pages-artifact@v3

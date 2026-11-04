@@ -32,3 +32,8 @@ jobs:
       # 5. Run the Vitest unit tests
       - name: Run tests
         run: npm test
+
+      # 6. Run the TestCafe end-to-end tests in headless Chrome
+      #    (uses the app that was built in step 4)
+      - name: Run end-to-end tests
+        run: npm run test:e2e
