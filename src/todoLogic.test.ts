@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createTodo, isValidTodoText } from './todoLogic';
+import { createTodo, isValidTodoText, toggleTodo } from './todoLogic';
+import type { Todo } from './todoLogic';
 
 describe('createTodo', () => {
   // the new todo should keep the text we gave it
@@ -35,5 +36,37 @@ describe('isValidTodoText', () => {
   // only spaces counts as empty too
   it('returns false for only spaces', () => {
     expect(isValidTodoText('   ')).toBe(false);
+  });
+});
+
+describe('toggleTodo', () => {
+  // a small test list with two todos
+  const todos: Todo[] = [
+    { id: 1, text: 'Buy milk', completed: false },
+    { id: 2, text: 'Walk the dog', completed: true },
+  ];
+
+  // a todo that is not done becomes done
+  it('marks a not completed todo as completed', () => {
+    const result = toggleTodo(todos, 1);
+    expect(result[0].completed).toBe(true);
+  });
+
+  // a todo that is done becomes not done again
+  it('marks a completed todo as not completed', () => {
+    const result = toggleTodo(todos, 2);
+    expect(result[1].completed).toBe(false);
+  });
+
+  // only the clicked todo should change
+  it('does not change the other todos', () => {
+    const result = toggleTodo(todos, 1);
+    expect(result[1]).toEqual(todos[1]);
+  });
+
+  // the original list stays the same, we get a new list back
+  it('does not change the original list', () => {
+    toggleTodo(todos, 1);
+    expect(todos[0].completed).toBe(false);
   });
 });
