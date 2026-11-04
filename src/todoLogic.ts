@@ -62,3 +62,18 @@ export const parseTodos = (saved: string | null): Todo[] => {
     return []; // the saved text is broken JSON
   }
 };
+
+// Turns a priority into a number so priorities can be compared.
+// The parameter is optional because a todo does not have to have a priority.
+const priorityValue = (priority?: Priority): number => {
+  if (priority === 'high') return 3;
+  if (priority === 'medium') return 2;
+  if (priority === 'low') return 1;
+  return 0; // no priority: goes to the bottom
+};
+
+// Returns a new list sorted by priority: high first, then medium, then low
+export const sortByPriority = (todos: Todo[]): Todo[] => {
+  // [...todos] makes a copy, because .sort() would change the original list
+  return [...todos].sort((a, b) => priorityValue(b.priority) - priorityValue(a.priority));
+};
