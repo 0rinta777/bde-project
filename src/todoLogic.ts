@@ -1,10 +1,14 @@
 // Pure todo logic: no DOM code here, so it can be tested with Vitest.
 
+// Type alias + union type: a priority can ONLY be one of these three strings
+export type Priority = 'low' | 'medium' | 'high';
+
 //structure of the data schema
 export interface Todo {
   id: number;
   text: string;
   completed: boolean;
+  priority?: Priority; // optional: a todo does not have to have a priority
 }
 
 // A todo text is only valid if it has at least one character that is not a space
@@ -12,11 +16,13 @@ export const isValidTodoText = (text: string): boolean => {
   return text.trim().length > 0;
 };
 
-export const createTodo =(text: string): Todo => {
+// priority is 'medium' if no priority is given
+export const createTodo = (text: string, priority: Priority = 'medium'): Todo => {
   return {
     id: Date.now(),
     text: text,
-    completed: false
+    completed: false,
+    priority: priority
   };
 };
 

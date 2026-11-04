@@ -94,11 +94,42 @@ h1 {
   display: none;
 }
 
-.todo-item span {
+.todo-item .todo-text {
+  flex: 1;
+  margin-left: 10px;
   cursor: pointer;
 }
 
-.todo-item.completed span {
+.todo-item.completed .todo-text {
   text-decoration: line-through;
   color: #888;
+}
+
+/* priority dropdown next to the input */
+.todo-form select {
+  margin: 0 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* small colored label that shows the priority of a todo */
+.priority-badge {
+  font-size: 0.75em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.priority-low {
+  background: #28a745;
+}
+
+.priority-medium {
+  background: #e0a800;
+}
+
+.priority-high {
+  background: #dc3545;
 }
