@@ -1,8 +1,17 @@
 import './style.css'
-import { createTodo, isValidTodoText, toggleTodo, searchTodos } from './todoLogic'
+import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos } from './todoLogic'
 import type { Todo, Priority } from './todoLogic'
 
-let todos: Todo[] = [ ];
+// the name (key) we save the todos under in localStorage
+const STORAGE_KEY = 'todos';
+
+// load the saved todos when the page opens (empty list if nothing is saved)
+let todos: Todo[] = parseTodos(localStorage.getItem(STORAGE_KEY));
+
+// save the whole list as text, because localStorage can only store strings
+const saveTodos = (): void => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+}
 
 const todoInput = document.getElementById('todo-input') as HTMLInputElement;
 const todoForm = document.querySelector('.todo-form') as HTMLFormElement;
@@ -28,6 +37,7 @@ const addTodo = (text: string, priority: Priority): void => {
   todos.push(newTodo);
   console.log(`todo added: ${todos}`);
 
+  saveTodos();
   renderTodos();
 }
 
@@ -98,6 +108,7 @@ const addRemoveButtonListener = (li:HTMLLIElement, id: number) :void => { //this
 
 const removeTodo = (id:number):void => {
   todos = todos.filter(todo => todo.id !== id)
+  saveTodos()
   renderTodos()
 }
 
@@ -106,6 +117,7 @@ const addToggleListener = (li: HTMLLIElement, id: number): void => {
   const textSpan = li.querySelector('.todo-text');
   textSpan?.addEventListener('click', () => {
     todos = toggleTodo(todos, id);
+    saveTodos();
     renderTodos();
   })
 }

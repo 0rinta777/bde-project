@@ -44,3 +44,21 @@ export const searchTodos = (todos: Todo[], searchText: string): Todo[] => {
   }
   return todos.filter(todo => todo.text.toLowerCase().includes(search));
 };
+
+// Turns the saved text from localStorage back into a list of todos.
+// JSON.parse returns the type `any`, because TypeScript can't know what is inside the text.
+// So we check the data first, before we treat it as Todo[].
+export const parseTodos = (saved: string | null): Todo[] => {
+  if (saved === null) {
+    return []; // nothing saved yet
+  }
+  try {
+    const data: any = JSON.parse(saved);
+    if (!Array.isArray(data)) {
+      return []; // saved data is not a list, so we can't use it
+    }
+    return data as Todo[];
+  } catch {
+    return []; // the saved text is broken JSON
+  }
+};
