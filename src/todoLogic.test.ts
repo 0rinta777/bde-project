@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createTodo } from './todoLogic';
+import { createTodo, isValidTodoText } from './todoLogic';
 
 describe('createTodo', () => {
   // the new todo should keep the text we gave it
@@ -18,5 +18,22 @@ describe('createTodo', () => {
   it('gets a number as id', () => {
     const todo = createTodo('Buy milk');
     expect(typeof todo.id).toBe('number');
+  });
+});
+
+describe('isValidTodoText', () => {
+  // normal text is allowed
+  it('returns true for normal text', () => {
+    expect(isValidTodoText('Buy milk')).toBe(true);
+  });
+
+  // an empty input should show the error
+  it('returns false for an empty string', () => {
+    expect(isValidTodoText('')).toBe(false);
+  });
+
+  // only spaces counts as empty too
+  it('returns false for only spaces', () => {
+    expect(isValidTodoText('   ')).toBe(false);
   });
 });
