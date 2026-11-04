@@ -1,5 +1,5 @@
 import './style.css'
-import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos } from './todoLogic'
+import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos, sortByPriority } from './todoLogic'
 import type { Todo, Priority } from './todoLogic'
 
 // the name (key) we save the todos under in localStorage
@@ -19,6 +19,7 @@ const todolist = document.getElementById('todo-list') as HTMLUListElement;
 const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
 const prioritySelect = document.getElementById('priority-select') as HTMLSelectElement;
 const searchInput = document.getElementById('search-input') as HTMLInputElement;
+const sortButton = document.getElementById('sort-button') as HTMLButtonElement;
 
 // shows the red border and the error text
 const showError = (): void => {
@@ -91,6 +92,13 @@ todoForm.addEventListener('submit', (event: Event) => {
 
 // update the list every time the user types in the search field
 searchInput.addEventListener('input', () => {
+  renderTodos()
+})
+
+// sort the list by priority, save the new order and show it
+sortButton.addEventListener('click', () => {
+  todos = sortByPriority(todos)
+  saveTodos()
   renderTodos()
 })
 

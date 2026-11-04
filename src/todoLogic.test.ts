@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos } from './todoLogic';
+import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos, sortByPriority } from './todoLogic';
 import type { Todo } from './todoLogic';
 
 describe('createTodo', () => {
@@ -163,5 +163,34 @@ describe('parseTodos', () => {
   // valid JSON, but not a list, so it can't be our todos
   it('returns an empty list when the saved data is not a list', () => {
     expect(parseTodos('{"text": "hello"}')).toEqual([]);
+  });
+});
+
+describe('sortByPriority', () => {
+  // a list that is NOT in priority order
+  const todos: Todo[] = [
+    { id: 1, text: 'Low task', completed: false, priority: 'low' },
+    { id: 2, text: 'No priority task', completed: false },
+    { id: 3, text: 'High task', completed: false, priority: 'high' },
+    { id: 4, text: 'Medium task', completed: false, priority: 'medium' },
+  ];
+
+  // high first, then medium, then low, and todos without a priority last
+  it('sorts high, then medium, then low, then no priority', () => {
+    const result = sortByPriority(todos);
+    const order = result.map(todo => todo.id);
+    expect(order).toEqual([3, 4, 1, 2]);
+  });
+
+  // sorting should not change the original list
+  it('does not change the original list', () => {
+    sortByPriority(todos);
+    expect(todos[0].id).toBe(1);
+  });
+
+  // no todos should get lost while sorting
+  it('keeps all todos', () => {
+    const result = sortByPriority(todos);
+    expect(result.length).toBe(4);
   });
 });
