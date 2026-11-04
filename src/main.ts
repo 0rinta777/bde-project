@@ -72,8 +72,6 @@ todolist.appendChild(li);
 })
 }
 
-renderTodos();
-
 
 todoForm.addEventListener('submit', (event: Event) => {
   event.preventDefault();
@@ -141,5 +139,10 @@ const addToggleListener = (li: HTMLLIElement, id: number): void => {
     renderTodos();
   })
 }
+
+// draw the saved todos when the page opens.
+// This must be at the end: renderTodos uses the listener functions above,
+// and a const function can't be used before the line where it is created.
+renderTodos();
 
 // end of code from 01-10 bde
