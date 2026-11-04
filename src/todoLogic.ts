@@ -35,3 +35,12 @@ export const toggleTodo = (todos: Todo[], id: number): Todo[] => {
     return todo;
   });
 };
+
+// Returns only the todos whose text contains the search text (not case-sensitive)
+export const searchTodos = (todos: Todo[], searchText: string): Todo[] => {
+  const search = searchText.trim().toLowerCase();
+  if (search === '') {
+    return todos; // empty search: show everything
+  }
+  return todos.filter(todo => todo.text.toLowerCase().includes(search));
+};

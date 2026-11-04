@@ -1,5 +1,5 @@
 import './style.css'
-import { createTodo, isValidTodoText, toggleTodo } from './todoLogic'
+import { createTodo, isValidTodoText, toggleTodo, searchTodos } from './todoLogic'
 import type { Todo, Priority } from './todoLogic'
 
 let todos: Todo[] = [ ];
@@ -9,6 +9,7 @@ const todoForm = document.querySelector('.todo-form') as HTMLFormElement;
 const todolist = document.getElementById('todo-list') as HTMLUListElement;
 const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
 const prioritySelect = document.getElementById('priority-select') as HTMLSelectElement;
+const searchInput = document.getElementById('search-input') as HTMLInputElement;
 
 // shows the red border and the error text
 const showError = (): void => {
@@ -35,7 +36,10 @@ const renderTodos = (): void => {
   // clears the current list - test
   todolist.innerHTML = '';
 
-  todos.forEach(todo => {
+  // only show the todos that match the search field
+  const visibleTodos: Todo[] = searchTodos(todos, searchInput.value);
+
+  visibleTodos.forEach(todo => {
 const li = document.createElement('li');
 li.className = 'todo-item';
 if (todo.completed) {
@@ -73,6 +77,11 @@ todoForm.addEventListener('submit', (event: Event) => {
   } else {
     showError()
   }
+})
+
+// update the list every time the user types in the search field
+searchInput.addEventListener('input', () => {
+  renderTodos()
 })
 
 // as soon as the user starts typing again, the error goes away

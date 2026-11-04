@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createTodo, isValidTodoText, toggleTodo } from './todoLogic';
+import { createTodo, isValidTodoText, toggleTodo, searchTodos } from './todoLogic';
 import type { Todo } from './todoLogic';
 
 describe('createTodo', () => {
@@ -98,5 +98,44 @@ describe('priority', () => {
     // @ts-expect-error 'urgent' is not a valid Priority
     const todo = createTodo('Something', 'urgent');
     expect(todo).toBeDefined();
+  });
+});
+
+describe('searchTodos', () => {
+  // a small test list with three todos
+  const todos: Todo[] = [
+    { id: 1, text: 'Buy milk', completed: false },
+    { id: 2, text: 'Walk the dog', completed: false },
+    { id: 3, text: 'Buy bread', completed: true },
+  ];
+
+  // only todos that contain the search text are returned
+  it('returns only the todos that match', () => {
+    const result = searchTodos(todos, 'buy');
+    expect(result.length).toBe(2);
+  });
+
+  // capital letters should not matter
+  it('is not case-sensitive', () => {
+    const result = searchTodos(todos, 'MILK');
+    expect(result[0].text).toBe('Buy milk');
+  });
+
+  // an empty search shows all todos
+  it('returns all todos when the search is empty', () => {
+    const result = searchTodos(todos, '');
+    expect(result.length).toBe(3);
+  });
+
+  // nothing matches, so the list is empty
+  it('returns an empty list when nothing matches', () => {
+    const result = searchTodos(todos, 'pizza');
+    expect(result).toEqual([]);
+  });
+
+  // searching should never delete todos from the original list
+  it('does not change the original list', () => {
+    searchTodos(todos, 'buy');
+    expect(todos.length).toBe(3);
   });
 });
