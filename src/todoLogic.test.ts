@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createTodo, isValidTodoText, toggleTodo, searchTodos } from './todoLogic';
+import { createTodo, isValidTodoText, toggleTodo, searchTodos, parseTodos } from './todoLogic';
 import type { Todo } from './todoLogic';
 
 describe('createTodo', () => {
@@ -137,5 +137,31 @@ describe('searchTodos', () => {
   it('does not change the original list', () => {
     searchTodos(todos, 'buy');
     expect(todos.length).toBe(3);
+  });
+});
+
+describe('parseTodos', () => {
+  // the first time the app opens, nothing is saved yet (getItem returns null)
+  it('returns an empty list when nothing is saved', () => {
+    expect(parseTodos(null)).toEqual([]);
+  });
+
+  // saving and loading again should give back the same todos
+  it('loads todos that were saved with JSON.stringify', () => {
+    const todos: Todo[] = [
+      { id: 1, text: 'Buy milk', completed: true, priority: 'high' },
+    ];
+    const saved = JSON.stringify(todos);
+    expect(parseTodos(saved)).toEqual(todos);
+  });
+
+  // broken text should not crash the app
+  it('returns an empty list when the saved text is not valid JSON', () => {
+    expect(parseTodos('this is not json')).toEqual([]);
+  });
+
+  // valid JSON, but not a list, so it can't be our todos
+  it('returns an empty list when the saved data is not a list', () => {
+    expect(parseTodos('{"text": "hello"}')).toEqual([]);
   });
 });
