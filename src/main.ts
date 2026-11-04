@@ -20,6 +20,7 @@ const errorMessage = document.getElementById('error-message') as HTMLParagraphEl
 const prioritySelect = document.getElementById('priority-select') as HTMLSelectElement;
 const searchInput = document.getElementById('search-input') as HTMLInputElement;
 const sortButton = document.getElementById('sort-button') as HTMLButtonElement;
+const clearButton = document.getElementById('clear-button') as HTMLButtonElement;
 
 // shows the red border and the error text
 const showError = (): void => {
@@ -100,6 +101,17 @@ sortButton.addEventListener('click', () => {
   todos = sortByPriority(todos)
   saveTodos()
   renderTodos()
+})
+
+// remove all todos from the list and from local storage
+clearButton.addEventListener('click', () => {
+  // ask first, so the user doesn't delete everything by accident
+  const sure: boolean = confirm('Are you sure you want to delete all todos?');
+  if (sure) {
+    todos = []
+    localStorage.removeItem(STORAGE_KEY)
+    renderTodos()
+  }
 })
 
 // as soon as the user starts typing again, the error goes away
