@@ -133,3 +133,13 @@ h1 {
 .priority-high {
   background: #dc3545;
 }
+
+/* search field above the list */
+#search-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
