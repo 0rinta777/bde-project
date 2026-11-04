@@ -1,168 +1,186 @@
+/* ---------- Colors and sizes (navy palette) ---------- */
 :root {
-  --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --line-height: 1.5;
-  --font-weight: 400;
+  --navy-dark: #14213d;    /* headings and text */
+  --navy: #1f3a68;         /* main buttons */
+  --navy-hover: #162a4c;   /* main buttons on hover */
+  --navy-light: #e8edf6;   /* page background */
+  --border: #cbd5e4;       /* input and card borders */
+  --muted: #7a869a;        /* completed todos, placeholder-like text */
+  --white: #ffffff;
+  --danger: #b23a48;       /* error and "dangerous" actions */
+  --danger-light: #fbeaec;
 
-  --color-scheme: light dark;
-  --color: rgba(255, 255, 255, 0.87);
-  --background-color: #242424;
-
-  --font-synthesis: none;
-  --text-rendering: optimizeLegibility;
-  --webkit-font-smoothing: antialiased;
-  --moz-osx-font-smoothing: grayscale;
-
-  --body-background-color: #f4f4f4;
-  --container-background-color: #fff;
-  --container-padding: 20px;
-  --container-border-radius: 5px;
-  --container-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  --container-width: 300px;
+  --radius: 6px;
+  --font: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
+/* ---------- Page ---------- */
 body {
-  font-family: var(--font-family);
-  background-color: var(--body-background-color);
   margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding: 40px 16px;
+  font-family: var(--font);
+  color: var(--navy-dark);
+  background: var(--navy-light);
 }
 
 .container {
-  background: var(--container-background-color);
-  padding: var(--container-padding);
-  border-radius: var(--container-border-radius);
-  box-shadow: var(--container-box-shadow);
-  width: var(--container-width);
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(20, 33, 61, 0.08);
 }
-
 
 h1 {
+  margin: 0 0 20px;
   text-align: center;
+  color: var(--navy-dark);
 }
+
+/* ---------- Inputs and buttons ---------- */
+input,
+select,
+button {
+  font: inherit;
+  border-radius: var(--radius);
+}
+
+input,
+select {
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--navy-dark);
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--navy);
+  outline-offset: 1px;
+}
+
+button {
+  padding: 10px 14px;
+  border: none;
+  background: var(--navy);
+  color: var(--white);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--navy-hover);
+}
+
+/* ---------- Add form ---------- */
 .todo-form {
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
 }
+
 .todo-form input {
   flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-.todo-form button {
-  padding: 10px;
-  border: none;
-  background: #28a745;
-  color: #fff;
-  border-radius: 3px;
-  cursor: pointer;
-}
-.todo-list {
-  list-style: none;
-  padding: 0;
-}
-.todo-item {
-  background: #f9f9f9;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.todo-item button {
-  border: none;
-  background: #dc3545;
-  color: #fff;
-  border-radius: 3px;
-  cursor: pointer;
+  min-width: 0; /* lets the input shrink on small screens */
 }
 
-
+/* ---------- Error handling ---------- */
 .input-error {
-  border: 2px solid red;
-  background-color: #ffe6e6; /* Optional: Light red background to indicate error */
+  border-color: var(--danger);
+  background: var(--danger-light);
 }
 
 #error-message {
-  color: red;
+  display: none; /* shown by main.ts when the input is empty */
+  margin: 6px 0 0;
   font-size: 0.9em;
-  margin-top: 5px;
-  display: none;
+  color: var(--danger);
+}
+
+/* ---------- Search and actions ---------- */
+#search-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* "Clear all" is a dangerous action, so it gets an outline in red */
+#clear-button {
+  background: var(--white);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+#clear-button:hover {
+  background: var(--danger-light);
+}
+
+/* ---------- Todo list ---------- */
+.todo-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.todo-item:hover {
+  border-color: var(--navy);
 }
 
 .todo-item .todo-text {
   flex: 1;
-  margin-left: 10px;
   cursor: pointer;
 }
 
 .todo-item.completed .todo-text {
   text-decoration: line-through;
-  color: #888;
+  color: var(--muted);
 }
 
-/* priority dropdown next to the input */
-.todo-form select {
-  margin: 0 5px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+/* the small "remove" button inside each todo */
+.todo-item button {
+  padding: 4px 8px;
+  font-size: 0.85em;
+  background: transparent;
+  color: var(--muted);
 }
 
-/* small colored label that shows the priority of a todo */
+.todo-item button:hover {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+/* ---------- Priority labels ---------- */
 .priority-badge {
-  font-size: 0.75em;
   padding: 2px 8px;
   border-radius: 10px;
-  color: #fff;
+  font-size: 0.75em;
+  color: var(--white);
   text-transform: capitalize;
 }
 
 .priority-low {
-  background: #28a745;
+  background: #7f9cc7;
 }
 
 .priority-medium {
-  background: #e0a800;
+  background: var(--navy);
 }
 
 .priority-high {
-  background: #dc3545;
-}
-
-/* search field above the list */
-#search-input {
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 15px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-/* sort button above the list */
-#sort-button {
-  margin-top: 10px;
-  padding: 8px 12px;
-  border: none;
-  background: #007bff;
-  color: #fff;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-/* clear all button next to the sort button */
-#clear-button {
-  margin-top: 10px;
-  margin-left: 5px;
-  padding: 8px 12px;
-  border: none;
-  background: #dc3545;
-  color: #fff;
-  border-radius: 3px;
-  cursor: pointer;
+  background: var(--danger);
 }
