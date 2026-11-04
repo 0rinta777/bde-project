@@ -184,3 +184,32 @@ test('keeps all todos when the user clicks Cancel', async t => {
     .click(clearButton)
     .expect(todoItems.count).eql(2);
 });
+
+// Picks a color in the color picker.
+// typeText doesn't work on <input type="color">, so we set the value in the browser
+// and send the same 'input' event that a real color pick sends.
+const pickThemeColor = ClientFunction((color: string) => {
+  const picker = document.getElementById('color-picker') as HTMLInputElement;
+  picker.value = color;
+  picker.dispatchEvent(new Event('input'));
+});
+
+const colorPicker = Selector('#color-picker');
+
+fixture('Theme color picker')
+  .page(APP_URL)
+  .beforeEach(startClean);
+
+test('picking a color changes the button color', async t => {
+  await pickThemeColor('#cc0066');
+  // #cc0066 written as rgb is rgb(204, 0, 102)
+  await t.expect(addButton.getStyleProperty('background-color')).eql('rgb(204, 0, 102)');
+});
+
+test('keeps the chosen color after refreshing the page', async t => {
+  await pickThemeColor('#cc0066');
+  await reloadPage();
+  await t
+    .expect(colorPicker.value).eql('#cc0066')
+    .expect(addButton.getStyleProperty('background-color')).eql('rgb(204, 0, 102)');
+});

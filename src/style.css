@@ -1,9 +1,10 @@
 /* ---------- Colors and sizes (navy palette) ---------- */
 :root {
   --navy-dark: #14213d;    /* headings and text */
-  --navy: #1f3a68;         /* main buttons */
-  --navy-hover: #162a4c;   /* main buttons on hover */
-  --navy-light: #e8edf6;   /* page background */
+  --navy: #1f3a68;         /* main theme color, can be changed with the color picker */
+  /* page background: a very light version of the theme color (12% theme color, 88% white),
+     so it changes automatically when the user picks a new theme color */
+  --navy-light: color-mix(in srgb, var(--navy) 12%, white);
   --border: #cbd5e4;       /* input and card borders */
   --muted: #7a869a;        /* completed todos, placeholder-like text */
   --white: #ffffff;
@@ -15,17 +16,24 @@
 }
 
 /* ---------- Page ---------- */
+/* the app box sits in the middle of the screen;
+   min-height (not height) lets the page grow when the list gets long */
 body {
   margin: 0;
   padding: 40px 16px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: var(--font);
   color: var(--navy-dark);
   background: var(--navy-light);
 }
 
 .container {
+  width: 100%;
   max-width: 480px;
-  margin: 0 auto;
   padding: 24px;
   background: var(--white);
   border-radius: var(--radius);
@@ -68,8 +76,28 @@ button {
   cursor: pointer;
 }
 
+/* darken the button a bit on hover; works for any theme color */
 button:hover {
-  background: var(--navy-hover);
+  filter: brightness(0.85);
+}
+
+/* ---------- Theme color picker ---------- */
+.theme-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+
+.theme-picker input[type="color"] {
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  cursor: pointer;
 }
 
 /* ---------- Add form ---------- */
@@ -118,6 +146,7 @@ button:hover {
 
 #clear-button:hover {
   background: var(--danger-light);
+  filter: none;
 }
 
 /* ---------- Todo list ---------- */
@@ -162,6 +191,7 @@ button:hover {
 .todo-item button:hover {
   background: var(--danger-light);
   color: var(--danger);
+  filter: none;
 }
 
 /* ---------- Priority labels ---------- */
@@ -173,14 +203,16 @@ button:hover {
   text-transform: capitalize;
 }
 
+/* fixed traffic-light colors: green = low, yellow = medium, red = high.
+   They do not change with the theme color. */
 .priority-low {
-  background: #7f9cc7;
+  background: #28a745;
 }
 
 .priority-medium {
-  background: var(--navy);
+  background: #e0a800;
 }
 
 .priority-high {
-  background: var(--danger);
+  background: #dc3545;
 }
